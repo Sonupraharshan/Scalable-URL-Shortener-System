@@ -6,7 +6,7 @@ import urlRoutes from "../routes/url.routes.js";
 import analyticsRoutes from "../routes/analytics.routes.js";
 import redirectRoutes from "../routes/redirect.routes.js";
 
-import rateLimiter from "../middleware/ratelimiter.js";
+import rateLimiter from "../middleware/rateLimiter.js";
 import errorHandler from "../middleware/errorHandler.js";
 
 export default async function expressLoader() {
