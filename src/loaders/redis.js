@@ -7,14 +7,13 @@ export default async function redisLoader() {
 
     redisClient = createClient({
         socket: {
-            host: process.env.REDIS_HOST || "127.0.0.1",
-            port: process.env.REDIS_PORT || 6379,
+            host: "127.0.0.1",
+            port: 6379,
             reconnectStrategy: (retries) => {
                 console.log(`Redis reconnecting... attempt ${retries}`);
                 return Math.min(retries * 100, 3000);
             }
         },
-        password: process.env.REDIS_PASSWORD
     });
 
     redisClient.on("error", (err) => {
