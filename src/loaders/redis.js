@@ -3,35 +3,41 @@ import { createClient } from "redis";
 let redisClient;
 
 export default async function redisLoader() {
-    if (redisClient) return redisClient;
+  if (redisClient) return redisClient;
 
-    redisClient = createClient({
-        socket: {
-            host: process.env.REDIS_HOST || "127.0.0.1",
-            port: process.env.REDIS_PORT || 6379,
-            reconnectStrategy: (retries) => {
-                console.log(`Redis reconnecting... attempt ${retries}`);
-                return Math.min(retries * 100, 3000);
-            }
-        },
-        password: process.env.REDIS_PASSWORD
-    });
+  const {
+    REDIS_HOST,
+    REDIS_PORT,
+    REDIS_PASSWORD
+  } = process.env;
 
-    redisClient.on("error", (err) => {
-        console.error("Redis error:", err.message);
-    });
+  if (!REDIS_HOST || !REDIS_PORT || !REDIS_PASSWORD) {
+    throw new Error("Redis environment variables are not set");
+  }
 
-    redisClient.on("connect", () => {
-        console.log("Redis connected");
-    });
+  redisClient = createClient({
+    socket: {
+      host: REDIS_HOST,
+      port: Number(REDIS_PORT)
+    },
+    password: REDIS_PASSWORD
+  });
 
-    await redisClient.connect();
-    return redisClient;
+  redisClient.on("connect", () => {
+    console.log("Redis connected");
+  });
+
+  redisClient.on("error", (err) => {
+    console.error("Redis error:", err.message);
+  });
+
+  await redisClient.connect();
+  return redisClient;
 }
 
 export function getRedisClient() {
-    if (!redisClient) {
-    throw new Error("Redis not initialized");
-    }
-    return redisClient;
+  if (!redisClient) {
+    throw new Error("Redis client not initialized");
+  }
+  return redisClient;
 }
