@@ -3,6 +3,7 @@ import { createClient } from "redis";
 let redisClient;
 
 export default async function redisLoader() {
+    console.log("Redis disabled (temporary)");
     if (redisClient) return redisClient;
 
     redisClient = createClient({
@@ -31,7 +32,7 @@ export default async function redisLoader() {
 
 export function getRedisClient() {
     if (!redisClient) {
-        throw new Error("Redis not initialized");
+    throw new Error("Redis not initialized");
     }
     return redisClient;
 }
