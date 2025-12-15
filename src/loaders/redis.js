@@ -3,7 +3,6 @@ import { createClient } from "redis";
 let redisClient;
 
 export default async function redisLoader() {
-    console.log("Redis disabled (temporary)");
     if (redisClient) return redisClient;
 
     redisClient = createClient({
